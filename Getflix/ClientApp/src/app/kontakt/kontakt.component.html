@@ -1,1 +1,29 @@
-<h1>Kontakt</h1>
+<div class="col-sm-6">
+  <h1>Fyll inn:</h1>
+  <form id="form" #kontaktForm ="ngForm">
+    <div class="form-group">
+      <label for="navn">Navn</label>
+      <input type="text" class="form-control" id="navn" required
+             [(ngModel)]="model.navn" name="navn" >
+    </div>
+   
+    <div class="form-group">
+      <label for="omrode">Område</label>
+      <select class="form-control" id="omrode" required
+              [(ngModel)]="model.omrode" name="omrode" placeholder="hei">
+        <option *ngFor="let omr of omrode" [value]="omr">{{omr}}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="melding">Melding</label>
+      <!--<input type="text" class="form-control" id="melding" required/>-->
+      <textarea id="melding" class="form-control" form="form" rows="5" cols="50" required
+                [(ngModel)]="model.melding" name="melding"></textarea>
+    </div>
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-success" [disabled]="!kontakt.form.valid">Send</button>
+    </div>
+  </form>
+</div>
