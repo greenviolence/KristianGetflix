@@ -1,1 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+
+#getflixKnapp {
+  color: red;
+  font-family: Impact, Charcoal, sans-serif;
+  font-weight: lighter;
+  font-size: 200%;
+  text-shadow: 2px 2px 1px blacK;
+}
