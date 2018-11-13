@@ -1,8 +1,18 @@
 export class Henvendelse {
+  public id: number;
+  public navn: string;
+  public omrode: string;
+  public melding: string;
+
   constructor(
-    public id: number,
-    public navn: String,
-    public omrode: String,
-    public melding: String
-  ) {}
+    id: number,
+    navn: string,
+    omrode: string,
+    melding: string
+  ) {
+    this.id = id;
+    this.navn = navn;
+    this.omrode = omrode;
+    this.melding = melding;
+  }
 }

@@ -16,5 +16,9 @@ export class KontaktComponent {
 
   model = new Henvendelse(1, 'Karl', this.omrode[0], "Hei");
 
+  nySak() {
+    this.model = new Henvendelse(1, '', '', '');
+  }
+
   get diagnostic() { return JSON.stringify(this.model); }
 }

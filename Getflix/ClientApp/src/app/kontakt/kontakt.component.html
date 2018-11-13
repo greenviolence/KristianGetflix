@@ -17,13 +17,13 @@
 
     <div class="form-group">
       <label for="melding">Melding</label>
-      <!--<input type="text" class="form-control" id="melding" required/>-->
       <textarea id="melding" class="form-control" form="form" rows="5" cols="50" required
                 [(ngModel)]="model.melding" name="melding"></textarea>
     </div>
 
     <div class="form-group">
-      <button type="submit" class="btn btn-success" [disabled]="!kontakt.form.valid">Send</button>
+      <button type="submit" class="btn btn-success" (click)="nySak()">Send</button>
     </div>
+    
   </form>
 </div>
