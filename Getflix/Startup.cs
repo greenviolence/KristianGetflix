@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Getflix.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Getflix
 {
@@ -21,6 +23,8 @@ namespace Getflix
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            var connection = @"Server=(localdb)\mssqllocaldb;Database=faq;Trusted_Connection=True;ConnectRetryCount=0";
+            services.AddDbContext<FaqContext>(options => options.UseSqlServer(connection));
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

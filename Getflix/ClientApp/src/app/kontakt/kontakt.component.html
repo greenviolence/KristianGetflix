@@ -1,29 +1,63 @@
-<div class="col-sm-6">
-  <h1>Fyll inn:</h1>
-  <form id="form" #kontaktForm ="ngForm">
+<div>
+  <div class="col-md-6 col-md-offset-1" *ngIf="visFaqs">
+    <h1 class="text-center">Ofte stilte spørsmål</h1>
+    <div *ngIf="laster">Laster FAQ...</div>
+    <table class="table table-bordered table-condensed">
+      <thead>
+        <tr>
+          <th>Navn</th>
+          <th>Område</th>
+          <th>Melding</th>
+          <th>Rating</th>
+          <th colspan="2">Var dette relevant?</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let henvendelse of alleFaqs">
+        <tr>
+          <td>{{henvendelse.navn}}</td>
+          <td>{{henvendelse.omrode}}</td>
+          <td>{{henvendelse.melding}}</td>
+          <td>{{henvendelse.rating}}</td>
+          <td><button class="btn btn-danger" (click)='nedRating(henvendelse.id)'><span class="glyphicon glyphicon glyphicon-thumbs-down"></span>NEI</button></td>
+          <td><button class="btn btn-success" (click)='oppRating(henvendelse.id)'><span class="glyphicon glyphicon glyphicon-thumbs-up"></span>JA</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <button class='btn btn-primary col-md-4 col-md-offset-4' (click)='registrerFaq()'>Send inn spørsmål</button>
+  </div>
+</div>
+
+<div class="col-sm-4 col-sm-offset-2" *ngIf="visSkjema">
+  <h1 class="text-center">Send inn spørsmål</h1>
+  <form [formGroup]="skjema" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="navn">Navn</label>
-      <input type="text" class="form-control" id="navn" required
-             [(ngModel)]="model.navn" name="navn" >
+      <input class="form-control" formControlName="navn" required />
+      <p class="alert alert-warning" [hidden]="skjema.controls.navn.valid || (skjema.controls.fornavn.pristine && !submitted)">
+        Navn kan ikke inneholde tall eller spesialtegn
+      </p>
     </div>
-   
     <div class="form-group">
       <label for="omrode">Område</label>
-      <select class="form-control" id="omrode" required
-              [(ngModel)]="model.omrode" name="omrode" placeholder="hei">
+      <select class="form-control" formControlName="omrode" required >
         <option *ngFor="let omr of omrode" [value]="omr">{{omr}}</option>
       </select>
     </div>
-
     <div class="form-group">
       <label for="melding">Melding</label>
-      <!--<input type="text" class="form-control" id="melding" required/>-->
-      <textarea id="melding" class="form-control" form="form" rows="5" cols="50" required
-                [(ngModel)]="model.melding" name="melding"></textarea>
+      <textarea class="form-control" formControlName="melding" rows="4" cols="50" required></textarea>
+      <p class="alert alert-warning" [hidden]="skjema.controls.melding.valid || (skjema.controls.adresse.pristine && !submitted)">
+        Må fylles inn
+      </p>
     </div>
-
     <div class="form-group">
-      <button type="submit" class="btn btn-success" [disabled]="!kontakt.form.valid">Send</button>
+      <input class="form-control" formControlName="rating" type="hidden" />
+    </div>
+    <div class="form-group">
+      <button type="submit" *ngIf="skjemaStatus=='Endre'" [disabled]="!skjema.valid" class="btn btn-primary">Endre</button>
+      <button type="submit" *ngIf="skjemaStatus=='Registrere'" [disabled]="!skjema.valid" class="btn btn-primary">Send inn Spørsmål</button>
+      <button class="btn btn-default" (click)="tilbakeTilListe()">Tilbake</button>
     </div>
   </form>
 </div>
+

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { HttpModule, JsonpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -21,13 +22,15 @@ import { HomeComponent } from './home/home.component';
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
+    HttpModule,
+    JsonpModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot([
 
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'faq', component: FaqComponent },
-      { path: 'kontakt', component: KontaktComponent },
+      //{ path: 'faq', component: FaqComponent },
+      { path: 'kontakt', component: KontaktComponent }
     ])
   ],
   providers: [],

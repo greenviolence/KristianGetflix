@@ -1,8 +1,7 @@
 export class Henvendelse {
-  constructor(
-    public id: number,
-    public navn: String,
-    public omrode: String,
-    public melding: String
-  ) {}
+  id: number;
+  navn: string;
+  omrode: string;
+  melding: string;
+  rating: number;
 }
