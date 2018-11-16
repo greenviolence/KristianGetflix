@@ -40,21 +40,6 @@ namespace Getflix.Controllers
             return Json(enFaq);
         }
 
-        [HttpPut("{id}")]
-        public JsonResult Put(int id, [FromBody]faq innFaq)
-        {
-            if (ModelState.IsValid)
-            {
-                var kundeDb = new DBFunk(_context);
-                bool OK = kundeDb.rateOpp(id, innFaq);
-                if (OK)
-                {
-                    return Json("OK");
-                }
-            }
-            return Json("Kunne ikke endre kunden i DB");
-        }
-
         [HttpPost]
         public JsonResult Post([FromBody]faq innFaq)
         {
@@ -68,6 +53,21 @@ namespace Getflix.Controllers
                 }
             }
             return Json("Kunne ikke sette inn spørsmålet i DB");
+        }
+
+        [HttpPut("{id}")]
+        public JsonResult Put(int id, [FromBody]faq innFaq)
+        {
+            if (ModelState.IsValid)
+            {
+                var kundeDb = new DBFunk(_context);
+                bool OK = kundeDb.rateOpp(id, innFaq);
+                if (OK)
+                {
+                    return Json("OK");
+                }
+            }
+            return Json("Kunne ikke endre kunden i DB");
         }
     }
 }

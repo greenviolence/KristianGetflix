@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+  import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Henvendelse } from '../henvendelse';
 import { Http, Response } from '@angular/http';
@@ -64,6 +64,9 @@ export class KontaktComponent {
     if (this.skjemaStatus == "Registrere") {
       this.lagreFaq();
     }
+    else if (this.skjemaStatus == "Endre") {
+      this.rateOpp();
+    }
     else {
       alert("Feil i applikasjonen!");
     }
@@ -113,7 +116,7 @@ export class KontaktComponent {
       );
   };
 
-  rateOpp(id: number) {
+  oppRating(id: number) {
     this._http.get("api/faq/" + id)
       //.map(returData => {
       //    let JsonData = returData.json();
@@ -136,7 +139,7 @@ export class KontaktComponent {
     this.visFaqs = false;
   }
   // her blir den endrede kunden lagret
-  oppRating() {
+  rateOpp() {
     var endretKunde = new Henvendelse();
 
     endretKunde.navn = this.skjema.value.navn;
