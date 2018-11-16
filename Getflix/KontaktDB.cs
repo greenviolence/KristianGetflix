@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Getflix.Models
 {
-    public class DBFunk
+    public class KontaktDB
     {
         private readonly FaqContext _context;
 
-        public DBFunk(FaqContext context)
+        public KontaktDB(FaqContext context)
         {
             _context = context;
         }
@@ -106,6 +106,57 @@ namespace Getflix.Models
             try
             {
                 // lagre kunden
+                _context.SaveChanges();
+            }
+            catch (Exception feil)
+            {
+                return false;
+            }
+            return true;
+        }
+
+
+        // Her begynner struktur for Svar databasen
+
+        public List<svar> hentAlleSvar()
+        {
+            List<svar> alleSvar = _context.Svarene.Select(k => new svar()
+            {
+                id = k.id,
+                navn = k.navn,
+                svarmelding = k.svarmelding,
+                rating = k.rating,
+            }).
+            ToList();
+            return alleSvar;
+        }
+
+        public svar hentEtSvar(int id)
+        {
+
+            Svar etDBSvar = _context.Svarene.FirstOrDefault(k => k.id == id);
+
+            var etSvar = new svar()
+            {
+                id = etDBSvar.id,
+                navn = etDBSvar.navn,
+                svarmelding = etDBSvar.svarmelding,
+                rating = etDBSvar.rating
+            };
+            return etSvar;
+        }
+
+        public bool lagreEtSvar(svar innSvar)
+        {
+            var nyttSvar = new Svar
+            {
+                navn = innSvar.navn,
+                svarmelding = innSvar.svarmelding
+            };
+
+            try
+            {
+                _context.Svarene.Add(nyttSvar);
                 _context.SaveChanges();
             }
             catch (Exception feil)

@@ -15,7 +15,21 @@ namespace Getflix.Models
         public string omrode { get; set;  }
         public string melding { get; set;  }
         public int rating { get; set; }
+
+        public virtual List<Svar> svarene { get; set; }
     }
+
+    public class Svar
+    {
+        [Key]
+        public int id { get; set; }
+        public string navn { get; set; }
+        public string svarmelding { get; set; }
+        public int rating { get; set; }
+
+        public virtual List<Faq> henvendelser { get; set; }
+    }
+   
 
     public class FaqContext : DbContext
     {
@@ -23,5 +37,7 @@ namespace Getflix.Models
             : base(options) { }
 
         public DbSet<Faq> Henvendelser { get; set; }
+
+        public DbSet<Svar> Svarene { get; set; }
     }
 }

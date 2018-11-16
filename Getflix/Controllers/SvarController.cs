@@ -1,25 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Getflix.Models;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Web.Http;
-using System.Net.Http.Formatting;
-using System.Data.Common;
-using Microsoft.AspNetCore.Mvc.Formatters.Json;
 
 namespace Getflix.Controllers
 {
     [Route("api/[controller]")]
-    public class FaqController : Controller
+    public class SvarController : Controller
     {
         private readonly FaqContext _context;
 
-        public FaqController(FaqContext context)
+        public SvarController(FaqContext context)
         {
             _context = context;
         }
@@ -27,17 +21,17 @@ namespace Getflix.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            var faqDB = new KontaktDB(_context);
-            List<faq> alleFaq = faqDB.hentAlleFaq();
-            return Json(alleFaq);
+            var svarDB = new KontaktDB(_context);
+            List<svar> alleSvar = svarDB.hentAlleSvar();
+            return Json(alleSvar);
         }
 
         [HttpGet("{id}")]
         public JsonResult Get(int id)
         {
-            var faqDB = new KontaktDB(_context);
-            faq enFaq = faqDB.hentEnFaq(id);
-            return Json(enFaq);
+            var svarDB = new KontaktDB(_context);
+            svar etSvar= svarDB.hentEtSvar(id);
+            return Json(etSvar);
         }
 
         [HttpPut("{id}")]
@@ -45,8 +39,8 @@ namespace Getflix.Controllers
         {
             if (ModelState.IsValid)
             {
-                var kundeDb = new KontaktDB(_context);
-                bool OK = kundeDb.rateOpp(id, innFaq);
+                var svarDb = new KontaktDB(_context);
+                bool OK = svarDb.rateOpp(id, innFaq);
                 if (OK)
                 {
                     return Json("OK");

@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { Henvendelse } from '../henvendelse';
+import { Henvendelse } from '../Henvendelse';
 import { Http, Response } from '@angular/http';
 import "rxjs/add/operator/map";
 import { Headers } from '@angular/http';
-import { style } from '@angular/core/src/animation/dsl';
 
 
 @Component({
@@ -14,7 +13,7 @@ import { style } from '@angular/core/src/animation/dsl';
 })
 /** kontakt component*/
 export class KontaktComponent {
-  omrode = ['Betaling', 'Teknisk', 'Annet'];
+  omrode = ['Betaling', 'Faktura', 'Teknisk', 'Innhold', 'Annet'];
   visSkjema: boolean;
   skjemaStatus: string;
   visFaqs: boolean;
@@ -25,7 +24,7 @@ export class KontaktComponent {
   constructor(private _http: Http, private fb: FormBuilder) {
     this.skjema = fb.group({
       id: [""],
-      navn: [null, Validators.compose([Validators.required, Validators.pattern("[a-zA-ZøæåØÆÅ\\-. ]{2,30}")])],
+      navn: [null, Validators.compose([Validators.required])],
       omrode: [""],
       melding: [null, Validators.compose([Validators.required])],
       rating: [""]
