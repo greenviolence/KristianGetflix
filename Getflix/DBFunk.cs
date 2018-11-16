@@ -24,6 +24,7 @@ namespace Getflix.Models
                 navn = k.navn,
                 omrode = k.omrode,
                 melding = k.melding,
+                svar = k.svar,
                 rating = k.rating,
             }).
             ToList();
@@ -41,6 +42,7 @@ namespace Getflix.Models
                 navn = enDBFaq.navn,
                 omrode= enDBFaq.omrode,
                 melding = enDBFaq.melding,
+                svar = enDBFaq.svar,
                 rating = enDBFaq.rating
             };
             return enFaq;
@@ -102,6 +104,7 @@ namespace Getflix.Models
             funnetKunde.navn = innKunde.navn;
             funnetKunde.omrode= innKunde.omrode;
             funnetKunde.melding = innKunde.melding;
+            funnetKunde.svar = innKunde.svar;
 
             try
             {

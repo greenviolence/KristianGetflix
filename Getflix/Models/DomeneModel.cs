@@ -4,7 +4,6 @@ namespace Getflix.Models
 {
     public class faq
     {
-        [Key]
         public int id { get; set; }
 
         [Required]
@@ -17,15 +16,9 @@ namespace Getflix.Models
 
         [Required]
         public string melding { get; set; }
+
+        public string svar { get; set; }
         
         public int rating { get; set; }
     }
-
-    //public class svar
-    //{
-    //    public int sid { get; set; }
-
-    //    [Required]
-    //    public string svarMelding { get; set; }
-    //}
 }

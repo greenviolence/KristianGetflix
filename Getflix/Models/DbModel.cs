@@ -14,6 +14,7 @@ namespace Getflix.Models
         public string navn { get; set;  }
         public string omrode { get; set;  }
         public string melding { get; set;  }
+        public string svar{ get; set;  }
         public int rating { get; set; }
     }
 

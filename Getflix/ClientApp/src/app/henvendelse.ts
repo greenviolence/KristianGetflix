@@ -3,5 +3,6 @@ export class Henvendelse {
   navn: string;
   omrode: string;
   melding: string;
+  svar: string;
   rating: number;
 }

@@ -21,6 +21,7 @@ export class KontaktComponent {
   alleFaqs: Array<Henvendelse>; // for listen av alle FAQ
   skjema: FormGroup;
   laster: boolean;
+  svarSkjema: boolean; 
 
   constructor(private _http: Http, private fb: FormBuilder) {
     this.skjema = fb.group({
@@ -28,6 +29,7 @@ export class KontaktComponent {
       navn: [null, Validators.compose([Validators.required, Validators.pattern("[a-zA-ZøæåØÆÅ\\-. ]{2,30}")])],
       omrode: [""],
       melding: [null, Validators.compose([Validators.required])],
+      svar: [""],
       rating: [""]
     });
   }
@@ -37,6 +39,7 @@ export class KontaktComponent {
     this.visSkjema = false;
     this.hentAlleFaqs();
     this.visFaqs = true;
+    this.svarSkjema = false;
   }
 
   hentAlleFaqs() {
@@ -80,6 +83,7 @@ export class KontaktComponent {
       navn: "",
       omrode: "",
       melding: "",
+      svar: "",
       rating: ""
     });
     this.skjema.markAsPristine();
@@ -129,6 +133,7 @@ export class KontaktComponent {
           this.skjema.patchValue({ navn: JsonData.navn });
           this.skjema.patchValue({ omrode: JsonData.omrode});
           this.skjema.patchValue({ melding: JsonData.melding });
+          this.skjema.patchValue({ svar: JsonData.svar });
           this.skjema.patchValue({ rating: JsonData.rating });
         },
         error => alert(error),
@@ -137,6 +142,7 @@ export class KontaktComponent {
     this.skjemaStatus = "Endre";
     this.visSkjema = true;
     this.visFaqs = false;
+    this.svarSkjema = true;
   }
   // her blir den endrede kunden lagret
   rateOpp() {
@@ -145,6 +151,7 @@ export class KontaktComponent {
     endretKunde.navn = this.skjema.value.navn;
     endretKunde.omrode = this.skjema.value.omrode;
     endretKunde.melding = this.skjema.value.melding;
+    endretKunde.svar = this.skjema.value.svar;
 
     var body: string = JSON.stringify(endretKunde);
     var headers = new Headers({ "Content-Type": "application/json" });
@@ -156,6 +163,7 @@ export class KontaktComponent {
           this.hentAlleFaqs();
           this.visSkjema = false;
           this.visFaqs = true;
+          this.svarSkjema = false;
         },
         error => alert(error),
         () => console.log("ferdig post-api/faq")
