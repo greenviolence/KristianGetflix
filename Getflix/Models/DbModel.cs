@@ -9,7 +9,6 @@ namespace Getflix.Models
 {
     public class Faq
     {
-        [Key]
         public int id { get; set; }
         public string navn { get; set;  }
         public string omrode { get; set;  }
