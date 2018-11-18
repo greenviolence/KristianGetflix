@@ -4,24 +4,23 @@ import { Henvendelse } from '../henvendelse';
 import { Http, Response } from '@angular/http';
 import "rxjs/add/operator/map";
 import { Headers } from '@angular/http';
-import { style } from '@angular/core/src/animation/dsl';
 
 
 @Component({
   selector: 'app-kontakt',
   templateUrl: './kontakt.component.html',
-  styleUrls: ['./kontakt.component.css']
+  styleUrls: ['./kontakt.component.css'],
 })
-/** kontakt component*/
+
 export class KontaktComponent {
   omrode = ['Betaling', 'Teknisk', 'Annet'];
   visSkjema: boolean;
   skjemaStatus: string;
   visFaqs: boolean;
-  alleFaqs: Array<Henvendelse>; // for listen av alle FAQ
+  alleFaqs: Array<Henvendelse>;
   skjema: FormGroup;
   laster: boolean;
-  svarSkjema: boolean; 
+  klikketStatus: string;
 
   constructor(private _http: Http, private fb: FormBuilder) {
     this.skjema = fb.group({
@@ -39,14 +38,11 @@ export class KontaktComponent {
     this.visSkjema = false;
     this.hentAlleFaqs();
     this.visFaqs = true;
-    this.svarSkjema = false;
+    this.klikketStatus = "Alle";
   }
 
   hentAlleFaqs() {
     this._http.get("api/faq/")
-      //.map(returData => {   --- .map er ikke lenger nødvendig!
-      //    let JsonData = returData.json();
-      //    return JsonData;
 
       .subscribe(
         JsonData => {
@@ -67,8 +63,14 @@ export class KontaktComponent {
     if (this.skjemaStatus == "Registrere") {
       this.lagreFaq();
     }
-    else if (this.skjemaStatus == "Endre") {
-      this.rateOpp();
+    else if (this.skjemaStatus == "Svare") {
+      this.endre();
+    }
+    else if (this.skjemaStatus == "RateOpp") {
+      this.endre();
+    }
+    else if (this.skjemaStatus == "RateNed") {
+      this.endre();
     }
     else {
       alert("Feil i applikasjonen!");
@@ -92,7 +94,7 @@ export class KontaktComponent {
     this.visSkjema = true;
   }
 
-  tilbakeTilListe() {
+  tilbakeTilFaq() {
     this.visFaqs = true;
     this.visSkjema = false;
   }
@@ -108,7 +110,6 @@ export class KontaktComponent {
     var headers = new Headers({ "Content-Type": "application/json" });
 
     this._http.post("api/faq", body, { headers: headers })
-      //.map(returData => returData.toString())
       .subscribe(
         retur => {
           this.hentAlleFaqs();
@@ -120,14 +121,10 @@ export class KontaktComponent {
       );
   };
 
-  oppRating(id: number) {
+  lageSvar(id: number) {
     this._http.get("api/faq/" + id)
-      //.map(returData => {
-      //    let JsonData = returData.json();
-      //    return JsonData;
-      // })
       .subscribe(
-        returData => { // legg de hentede data inn i feltene til endreSkjema. Kan bruke setValue også her da hele skjemaet skal oppdateres. 
+        returData => { 
           let JsonData = returData.json();
           this.skjema.patchValue({ id: JsonData.id });
           this.skjema.patchValue({ navn: JsonData.navn });
@@ -139,34 +136,96 @@ export class KontaktComponent {
         error => alert(error),
         () => console.log("ferdig get-api/faq")
       );
-    this.skjemaStatus = "Endre";
+    this.skjemaStatus = "Svare";
     this.visSkjema = true;
     this.visFaqs = false;
-    this.svarSkjema = true;
   }
-  // her blir den endrede kunden lagret
-  rateOpp() {
-    var endretKunde = new Henvendelse();
 
-    endretKunde.navn = this.skjema.value.navn;
-    endretKunde.omrode = this.skjema.value.omrode;
-    endretKunde.melding = this.skjema.value.melding;
-    endretKunde.svar = this.skjema.value.svar;
+  endre() {
+    var endretFaq = new Henvendelse();
 
-    var body: string = JSON.stringify(endretKunde);
+    endretFaq.navn = this.skjema.value.navn;
+    endretFaq.omrode = this.skjema.value.omrode;
+    endretFaq.melding = this.skjema.value.melding;
+    endretFaq.svar = this.skjema.value.svar;
+    if (this.skjemaStatus == 'RateOpp') {
+      endretFaq.rating = this.skjema.value.rating += 1;
+    }
+    else if (this.skjemaStatus == 'RateNed') {
+      endretFaq.rating = this.skjema.value.rating -= 1;
+    }
+    else {
+      endretFaq.rating = this.skjema.value.rating;
+    }
+
+    var body: string = JSON.stringify(endretFaq);
     var headers = new Headers({ "Content-Type": "application/json" });
 
     this._http.put("api/faq/" + this.skjema.value.id, body, { headers: headers })
-      //.map(returData => returData.toString())
       .subscribe(
         retur => {
           this.hentAlleFaqs();
           this.visSkjema = false;
           this.visFaqs = true;
-          this.svarSkjema = false;
         },
         error => alert(error),
         () => console.log("ferdig post-api/faq")
       );
+  }
+
+  rateOpp(id: number) {
+    this._http.get("api/faq/" + id)
+      .subscribe(
+        returData => {
+          let JsonData = returData.json();
+          this.skjema.patchValue({ id: JsonData.id });
+          this.skjema.patchValue({ navn: JsonData.navn });
+          this.skjema.patchValue({ omrode: JsonData.omrode });
+          this.skjema.patchValue({ melding: JsonData.melding });
+          this.skjema.patchValue({ svar: JsonData.svar });
+          this.skjema.patchValue({ rating: JsonData.rating });
+        },
+        error => alert(error),
+        () => console.log("ferdig get-api/faq")
+      );
+    this.skjemaStatus = "RateOpp";
+    this.visSkjema = true;
+    this.visFaqs = false;
+  }
+
+  rateNed(id: number) {
+    this._http.get("api/faq/" + id)
+      .subscribe(
+        returData => { 
+          let JsonData = returData.json();
+          this.skjema.patchValue({ id: JsonData.id });
+          this.skjema.patchValue({ navn: JsonData.navn });
+          this.skjema.patchValue({ omrode: JsonData.omrode });
+          this.skjema.patchValue({ melding: JsonData.melding });
+          this.skjema.patchValue({ svar: JsonData.svar });
+          this.skjema.patchValue({ rating: JsonData.rating });
+        },
+        error => alert(error),
+        () => console.log("ferdig get-api/faq")
+      );
+    this.skjemaStatus = "RateNed";
+    this.visSkjema = true;
+    this.visFaqs = false;
+  }
+
+  visAlle() {
+    this.klikketStatus = "Alle";
+  }
+
+  visBetaling() {
+    this.klikketStatus = "Betaling";
+  }
+
+  visTeknisk() {
+    this.klikketStatus = "Teknisk";
+  }
+
+  visAnnet() {
+    this.klikketStatus = "Annet";
   }
 }

@@ -11,7 +11,6 @@ namespace Getflix.Models
         public string navn { get; set; }
 
         [Required]
-        [RegularExpression("^[a-zæøåA-ZÆØÅ .\\-]{2,30}$")]
         public string omrode { get; set; }
 
         [Required]

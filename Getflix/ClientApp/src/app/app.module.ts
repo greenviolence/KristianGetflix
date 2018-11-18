@@ -7,7 +7,6 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
-import { FaqComponent } from './faq/faq.component';
 import { KontaktComponent } from './kontakt/kontakt.component';
 import { HomeComponent } from './home/home.component';
 
@@ -16,7 +15,6 @@ import { HomeComponent } from './home/home.component';
     AppComponent,
     NavComponent,
     HomeComponent,
-    FaqComponent,
     KontaktComponent,
   ],
   imports: [
@@ -29,7 +27,6 @@ import { HomeComponent } from './home/home.component';
     RouterModule.forRoot([
 
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      //{ path: 'faq', component: FaqComponent },
       { path: 'kontakt', component: KontaktComponent }
     ])
   ],

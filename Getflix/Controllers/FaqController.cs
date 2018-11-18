@@ -38,7 +38,7 @@ namespace Getflix.Controllers
             var faqDB = new DBFunk(_context);
             faq enFaq = faqDB.hentEnFaq(id);
             return Json(enFaq);
-        }
+        }   
 
         [HttpPost]
         public JsonResult Post([FromBody]faq innFaq)
@@ -60,14 +60,14 @@ namespace Getflix.Controllers
         {
             if (ModelState.IsValid)
             {
-                var kundeDb = new DBFunk(_context);
-                bool OK = kundeDb.rateOpp(id, innFaq);
+                var faqDb= new DBFunk(_context);
+                bool OK = faqDb.endre(id, innFaq);
                 if (OK)
                 {
                     return Json("OK");
                 }
             }
-            return Json("Kunne ikke endre kunden i DB");
+            return Json("Kunne ikke endre saken i DB");
         }
     }
 }

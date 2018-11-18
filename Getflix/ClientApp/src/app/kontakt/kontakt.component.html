@@ -1,44 +1,41 @@
-<!--<div class="container">
-  <div class="col-md-10 col-md-offset-" *ngIf="visFaqs" id="gruppe">
-    <ul *ngFor="let omr of omrode container" class="list-group">
-      <li class="list-group-item"><h3 class="text-center" id="omrodeStyle">Spørsmål om: {{omr}}</h3>
-        <ul *ngFor="let henvendelse of alleFaqs" class="list-group">
-          <li *ngIf="omr == henvendelse .omrode" class="list-group-item">
-            <div class="list-group-item list-group-item-success"><p class="text-center" id="navn">{{henvendelse.navn}} spør:</p><p class="text-center">{{henvendelse.melding}}</p></div>
-            <div *ngIf="henvendelse.svar" class="list-group-item list-group-item-info">{{henvendelse.svar}}</div>
-            <button *ngIf="!henvendelse.svar" class="btn btn-info" (click)='oppRating(henvendelse.id)'><span class="glyphicon glyphicon-comment"></span>Svar</button>
-            <button *ngIf="henvendelse.svar" class="btn btn-info" (click)='oppRating(henvendelse.id)'><span class="glyphicon glyphicon-edit"></span>Rediger svar</button>
-          </li>
-        </ul>
-      </li>
-    </ul>
-    <button class="btn btn-primary col-md-4 col-md-offset-4" (click)='registrerFaq()'>Send inn spørsmål</button>
-  </div>
-</div>-->
 
-<div class="" id="main">
-  <div class="col-md-10" *ngIf="visFaqs" id="faq">
+<div class="body-content">
+
+  <div class="col-sm-10 col-sm-offset-1" *ngIf="visFaqs" id="faq">
+    <div class="row" id="filterKnapper">
+      <button class="btn" [class.klikket]="klikketStatus == 'Alle'" (click)="visAlle()">Vis alle</button>
+      <button class="btn" [class.klikket]="klikketStatus == 'Betaling'" (click)="visBetaling()">Vis 'Betaling'</button>
+      <button class="btn" [class.klikket]="klikketStatus == 'Teknisk'" (click)="visTeknisk()">Vis 'Teknisk'</button>
+      <button class="btn" [class.klikket]="klikketStatus == 'Annet'" (click)="visAnnet()">Vis 'Annet'</button>
+    </div>
+    <div *ngIf="laster" class="spinner">
+      <div class="rect1"></div>
+      <div class="rect2"></div>
+      <div class="rect3"></div>
+      <div class="rect4"></div>
+      <div class="rect5"></div>
+    </div>
     <h1 class="text-center" id="tekstHeader">Ofte stilte spørsmål</h1>
     <ul *ngFor="let omr of omrode" id="omrode">
-      <li>
+      <li *ngIf="klikketStatus==omr || klikketStatus=='Alle'">
         <h3 class="text-center" id="tekstOmrode">Spørsmål om: {{omr}}</h3>
         <ul *ngFor="let henvendelse of alleFaqs">
-          <li *ngIf="omr == henvendelse.omrode" class="">
+          <li *ngIf="omr == henvendelse.omrode">
             <div id="sak">
               <div id="">
                 <p id="rating">{{henvendelse.rating}}</p>
-                <button class="btn btn-success"><span class="glyphicon glyphicon-thumbs-up"></span>Relevant</button>
-                <button class="btn btn-danger"><span class="glyphicon glyphicon-thumbs-down"></span>Ikke relevant</button>
+                <button class="btn btn-success" (click)='rateOpp(henvendelse.id)'><span class="glyphicon glyphicon-thumbs-up"></span>Relevant</button>
+                <button class="btn btn-danger" (click)='rateNed(henvendelse.id)'><span class="glyphicon glyphicon-thumbs-down"></span>Ikke relevant</button>
               </div>
-              <div id="melding" class="push">
+              <div id="melding" class="">
                 <p class="text-center" id="bold">{{henvendelse.navn}} spør:</p><p id="tekstInnhold">{{henvendelse.melding}}</p>
               </div>
               <div *ngIf="henvendelse.svar" class="" id="svar">
                 <p class="text-center" id="bold">Svar:</p><p id="tekstInnhold">{{henvendelse.svar}}</p>
               </div>
-              <div id="endreKnapper">
-                <button *ngIf="!henvendelse.svar" class="btn btn-info" (click)='oppRating(henvendelse.id)'><span class="glyphicon glyphicon-comment"></span>Svar</button>
-                <button *ngIf="henvendelse.svar" class="btn btn-info" id="svarKnapp" (click)='oppRating(henvendelse.id)'><span class="glyphicon glyphicon-edit"></span>Rediger svar</button>
+              <div id="svarKnapper">
+                <button *ngIf="!henvendelse.svar" class="btn btn-info" (click)='lageSvar(henvendelse.id)'><span class="glyphicon glyphicon-comment"></span>Svar</button>
+                <button *ngIf="henvendelse.svar" class="btn btn-info" id="svarKnapp" (click)='lageSvar(henvendelse.id)'><span class="glyphicon glyphicon-edit"></span>Rediger svar</button>
               </div>
             </div>
           </li>
@@ -47,43 +44,51 @@
     </ul>
     <button class="btn btn-primary col-md-4 col-md-offset-4" id="reg" (click)='registrerFaq()'>Send inn spørsmål</button>
   </div>
+
+  <div class="col-sm-10 col-sm-offset-1" *ngIf="visSkjema" [class.skjemaSvar]="skjemaStatus=='Svare'" [class.skjemaRate]="skjemaStatus=='RateOpp' || skjemaStatus=='RateNed'" [class.skjemaRegistrer]="skjemaStatus=='Registrere'">
+    <h1 class="text-center" *ngIf="skjemaStatus=='Registrere'">Send inn spørsmål</h1>
+    <h1 class="text-center" *ngIf="skjemaStatus=='Svare'">Send inn svar</h1>
+    <h1 class="text-center" *ngIf="skjemaStatus=='RateOpp'">Var spørsmålet relevant?</h1>
+    <h1 class="text-center" *ngIf="skjemaStatus=='RateNed'">Var ikke spørsmålet relevant?</h1>
+    <form [formGroup]="skjema" (ngSubmit)="onSubmit()">
+      <input class="form-control" formControlName="id" type="hidden" />
+      <div class="form-group" [hidden]="skjemaStatus=='Svare' || skjemaStatus=='RateOpp' || skjemaStatus=='RateNed'">
+        <label id="mLeft" for="navn">Navn</label>
+        <input class="form-control" formControlName="navn" id="skjemaElement" placeholder="Navnet vises for alle (trenger ikke være ditt ekte navn)" required />
+        <p id="skjemaElement" class="alert alert-warning" [hidden]="skjema.controls.navn.valid || (skjema.controls.navn.pristine && !submitted)">
+          Navn kan ikke inneholde tall eller spesialtegn og må fylles inn.
+        </p>
+      </div>
+      <div class="form-group" [hidden]="skjemaStatus=='Svare' || skjemaStatus=='RateOpp' || skjemaStatus=='RateNed'">
+        <label id="mLeft" for="omrode">Område</label>
+        <select class="form-control" id="skjemaElement" formControlName="omrode" required>
+          <option *ngFor="let omr of omrode" [value]="omr">{{omr}}</option>
+        </select>
+      </div>
+      <div class="form-group" [hidden]="skjemaStatus=='Svare' || skjemaStatus=='RateOpp' || skjemaStatus=='RateNed'">
+        <label id="mLeft" for="melding">Melding</label>
+        <textarea class="form-control" id="skjemaElement" formControlName="melding" rows="4" cols="50" required></textarea>
+        <p id="skjemaElement" class="alert alert-warning" [hidden]="skjema.controls.melding.valid || (skjema.controls.melding.pristine && !submitted)">
+          Må fylles inn.
+        </p>
+      </div>
+      <div class="form-group" [hidden]="skjemaStatus=='Registrere' || skjemaStatus=='RateOpp' || skjemaStatus=='RateNed'">
+        <label id="mLeft" for="svar">Svar</label>
+        <textarea class="form-control" id="skjemaElement" formControlName="svar" rows="9" cols="50" placeholder="Sendes denne inn blankt vil svaret slettes/ ikke leveres"></textarea>
+      </div>
+      <div class="form-group">
+        <input class="form-control" formControlName="rating" type="hidden" />
+      </div>
+      <div class="form-group">
+        <button type="submit" id="mLeft" *ngIf="skjemaStatus=='Svare'" [disabled]="!skjema.valid" class="btn btn-primary">Send inn svar</button>
+        <button type="submit" id="mLeft" *ngIf="skjemaStatus=='Registrere'" [disabled]="!skjema.valid" class="btn btn-primary">Send inn Spørsmål</button>
+        <button type="submit" *ngIf="skjemaStatus=='RateOpp'" id="rateKnappOpp" class="btn btn-success"><span>JA!</span></button><br *ngIf="skjemaStatus=='RateOpp'"/>
+        <button type="submit" *ngIf="skjemaStatus=='RateNed'" id="rateKnappNed" class="btn btn-danger"><span>NEI!</span></button><br *ngIf="skjemaStatus=='RateNed'"/>
+        <button class="btn btn-default" (click)="tilbakeTilFaq()">Tilbake</button>
+      </div>
+    </form>
+  </div>
+
 </div>
 
-<div class="col-sm-4 col-sm-offset-2" *ngIf="visSkjema">
-  <h1 class="text-center">Send inn spørsmål</h1>
-  <form [formGroup]="skjema" (ngSubmit)="onSubmit()">
-    <input class="form-control" formControlName="id" type="hidden" />
-    <div class="form-group" [hidden]=svarSkjema>
-      <label for="navn">Navn</label>
-      <input class="form-control" formControlName="navn" required />
-      <p class="alert alert-warning" [hidden]="skjema.controls.navn.valid || (skjema.controls.fornavn.pristine && !submitted)">
-        Navn kan ikke inneholde tall eller spesialtegn
-      </p>
-    </div>
-    <div class="form-group" [hidden]=svarSkjema>
-      <label for="omrode">Område</label>
-      <select class="form-control" formControlName="omrode" required>
-        <option *ngFor="let omr of omrode" [value]="omr">{{omr}}</option>
-      </select>
-    </div>
-    <div class="form-group" [hidden]=svarSkjema>
-      <label for="melding">Melding</label>
-      <textarea class="form-control" formControlName="melding" rows="4" cols="50" required></textarea>
-      <p class="alert alert-warning" [hidden]="skjema.controls.melding.valid || (skjema.controls.adresse.pristine && !submitted)">
-        Må fylles inn
-      </p>
-    </div>
-    <div class="form-group" *ngIf="skjemaStatus=='Endre'">
-      <label for="svar">Svar</label>
-      <textarea class="form-control" formControlName="svar" rows="4" cols="50" required></textarea>
-    </div>
-    <div class="form-group">
-      <input class="form-control" formControlName="rating" type="hidden" />
-    </div>
-    <div class="form-group">
-      <button type="submit" *ngIf="skjemaStatus=='Endre'" [disabled]="!skjema.valid" class="btn btn-primary">Send inn svar</button>
-      <button type="submit" *ngIf="skjemaStatus=='Registrere'" [disabled]="!skjema.valid" class="btn btn-primary">Send inn Spørsmål</button>
-      <button class="btn btn-default" (click)="tilbakeTilListe()">Tilbake</button>
-    </div>
-  </form>
-</div>
+  

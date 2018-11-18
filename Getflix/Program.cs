@@ -24,6 +24,13 @@ namespace Getflix
                 {
                     var context = services.GetRequiredService<FaqContext>();
                     context.Database.EnsureCreated();
+
+
+                    var faq = context.Henvendelser.FirstOrDefault(f => f.id == 1);
+                    if(faq == null)
+                    {
+                        DBSeeder.Seed(context);
+                    }
                 }
                 catch (Exception ex)
                 {

@@ -18,14 +18,14 @@ namespace Getflix.Models
 
         public List<faq> hentAlleFaq()
         {
-            List<faq> alleFaq = _context.Henvendelser.Select(k => new faq()
+            List<faq> alleFaq = _context.Henvendelser.Select(f => new faq()
             {
-                id = k.id,
-                navn = k.navn,
-                omrode = k.omrode,
-                melding = k.melding,
-                svar = k.svar,
-                rating = k.rating,
+                id = f.id,
+                navn = f.navn,
+                omrode = f.omrode,
+                melding = f.melding,
+                svar = f.svar,
+                rating = f.rating,
             }).
             ToList();
             return alleFaq;
@@ -34,7 +34,7 @@ namespace Getflix.Models
         public faq hentEnFaq(int id)
         {
 
-            Faq enDBFaq = _context.Henvendelser.FirstOrDefault(k => k.id == id);
+            Faq enDBFaq = _context.Henvendelser.FirstOrDefault(f => f.id == id);
 
             var enFaq= new faq()
             {
@@ -69,46 +69,49 @@ namespace Getflix.Models
             return true;
         }
 
-        //public bool oppRating(int id, faq innFaq)
-        //{
-        //    // finn kunden
-        //    Faq funnetHenvendelse = _context.Henvendelser.FirstOrDefault(k => k.id == id);
-        //    if (funnetHenvendelse == null)
-        //    {
-        //        return false;
-        //    }
-        //    // legg inn ny verdier i denne fra innKunde
-        //    funnetHenvendelse.rating = innFaq.rating++;
-
-        //    try
-        //    {
-        //        // lagre kunden
-        //        _context.SaveChanges();
-        //    }
-        //    catch (Exception feil)
-        //    {
-        //        return false;
-        //    }
-        //    return true;
-        //}
-
-        public bool rateOpp(int id, faq innKunde)
+        public bool endre(int id, faq innFaq)
         {
-            // finn kunden
-            Faq funnetKunde = _context.Henvendelser.FirstOrDefault(k => k.id == id);
-            if (funnetKunde == null)
+
+            Faq funnetHenvendelse = _context.Henvendelser.FirstOrDefault(f => f.id == id);
+            if (funnetHenvendelse == null)
             {
                 return false;
             }
-            // legg inn ny verdier i denne fra innKunde
-            funnetKunde.navn = innKunde.navn;
-            funnetKunde.omrode= innKunde.omrode;
-            funnetKunde.melding = innKunde.melding;
-            funnetKunde.svar = innKunde.svar;
+
+            funnetHenvendelse.navn = innFaq.navn;
+            funnetHenvendelse.omrode = innFaq.omrode;
+            funnetHenvendelse.melding = innFaq.melding;
+            funnetHenvendelse.svar = innFaq.svar;
+            funnetHenvendelse.rating = innFaq.rating;
 
             try
             {
-                // lagre kunden
+                _context.SaveChanges();
+            }
+            catch (Exception feil)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool rateOpp(int id, faq innFaq)
+        {
+            Faq funnetHenvendelse = _context.Henvendelser.FirstOrDefault(f => f.id == id);
+            if (funnetHenvendelse == null)
+            {
+                return false;
+            }
+
+            funnetHenvendelse.navn = innFaq.navn;
+            funnetHenvendelse.omrode = innFaq.omrode;
+            funnetHenvendelse.melding = innFaq.melding;
+            funnetHenvendelse.svar = innFaq.svar;
+            funnetHenvendelse.rating = innFaq.rating;
+
+
+            try
+            {
                 _context.SaveChanges();
             }
             catch (Exception feil)
