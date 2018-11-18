@@ -2,6 +2,7 @@
 
 namespace Getflix.Models
 {
+    // Seeder databasen med henvendelser, de fleste med svar, men også en som ikke er besvart enda
     public class DBSeeder
     {
         public static void Seed(FaqContext context)

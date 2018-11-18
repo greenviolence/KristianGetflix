@@ -25,7 +25,7 @@ namespace Getflix
                     var context = services.GetRequiredService<FaqContext>();
                     context.Database.EnsureCreated();
 
-
+                    // kjører database seedingen om det ikke finnes noe i databasen fra før av 
                     var faq = context.Henvendelser.FirstOrDefault(f => f.id == 1);
                     if(faq == null)
                     {

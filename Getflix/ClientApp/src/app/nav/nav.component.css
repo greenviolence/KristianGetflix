@@ -1,4 +1,4 @@
-/* Highlighting rules for nav menu items */
+/* setter markering av meny-objekter */
 li.link-active a,
 li.link-active a:hover,
 li.link-active a:focus {
@@ -6,7 +6,7 @@ li.link-active a:focus {
     color: white;
 }
 
-/* Keep the nav menu independent of scrolling and on top of other items */
+/* Holder nav menyen fast plassert til og med ved skrolling */
 .main-nav {
     position: fixed;
     top: 0;
@@ -46,7 +46,7 @@ li.link-active a:focus {
         border-radius: 4px;
     }
     .navbar a {
-        /* If a menu item's text is too long, truncate it */
+        /* forkorter teksten på et meny-objkt så den ikke går utenfor feltet sitt */
         width: 100%;
         white-space: nowrap;
         overflow: hidden;

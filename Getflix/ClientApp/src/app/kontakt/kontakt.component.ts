@@ -1,4 +1,4 @@
-  import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Henvendelse } from '../henvendelse';
 import { Http, Response } from '@angular/http';
@@ -26,13 +26,14 @@ export class KontaktComponent {
     this.skjema = fb.group({
       id: [""],
       navn: [null, Validators.compose([Validators.required, Validators.pattern("[a-zA-ZøæåØÆÅ\\-. ]{2,30}")])],
-      omrode: [""],
+      omrode: [null, Validators.compose([Validators.required])],
       melding: [null, Validators.compose([Validators.required])],
       svar: [""],
       rating: [""]
     });
   }
 
+  // Når komponenten laster settes diverse statuser og hentAlleFaqs kjøres
   ngOnInit() {
     this.laster = true;
     this.visSkjema = false;
@@ -41,9 +42,9 @@ export class KontaktComponent {
     this.klikketStatus = "Alle";
   }
 
+  // Henter spørsmålene og setter dem i et array
   hentAlleFaqs() {
     this._http.get("api/faq/")
-
       .subscribe(
         JsonData => {
           this.alleFaqs = [];
@@ -59,6 +60,7 @@ export class KontaktComponent {
       );
   };
 
+  // kaller på ulike funksjonene ved ulike tilfeller av at en submit knapp er trykket
   onSubmit() {
     if (this.skjemaStatus == "Registrere") {
       this.lagreFaq();
@@ -78,8 +80,7 @@ export class KontaktComponent {
   }
 
   registrerFaq() {
-    // må resette verdiene i skjema dersom skjema har blitt brukt til endringer
-
+    // reseter verdiene i skjema dersom skjema har blitt brukt til endringer
     this.skjema.setValue({
       id: "",
       navn: "",
@@ -213,6 +214,8 @@ export class KontaktComponent {
     this.visFaqs = false;
   }
 
+
+  // Funksjoner for filtervisning
   visAlle() {
     this.klikketStatus = "Alle";
   }
